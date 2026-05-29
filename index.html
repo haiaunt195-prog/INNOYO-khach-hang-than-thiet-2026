@@ -86,22 +86,16 @@ button:disabled{ opacity:0.7; cursor:not-allowed; }
 <div class="address-grid">
   <div>
     <label>Tỉnh / Thành phố <span class="required">*</span></label>
-    <select id="province" onchange="onProvinceChange()">
-      <option value="">-- Chọn Tỉnh/Thành --</option>
-    </select>
+    <input id="province" placeholder="Ví dụ: TP. Hồ Chí Minh"/>
   </div>
   <div>
     <label>Quận / Huyện <span class="required">*</span></label>
-    <select id="district" onchange="onDistrictChange()" disabled>
-      <option value="">-- Chọn Quận/Huyện --</option>
-    </select>
+    <input id="district" placeholder="Ví dụ: Quận 7"/>
   </div>
 </div>
 
 <label>Phường / Xã <span class="required">*</span></label>
-<select id="ward" disabled>
-  <option value="">-- Chọn Phường/Xã --</option>
-</select>
+<input id="ward" placeholder="Ví dụ: Phường Tân Phong"/>
 
 <h2>Sản phẩm muốn mua <span class="required">*</span></h2>
 <div id="product-list"></div>
@@ -126,10 +120,8 @@ button:disabled{ opacity:0.7; cursor:not-allowed; }
 </div>
 
 <script>
-// ===================== ĐỊA GIỚI HÀNH CHÍNH =====================
-// Dữ liệu rút gọn theo địa giới sáp nhập mới nhất 2025
-// Đủ 34 tỉnh/thành sau sáp nhập
-const GEO = {
+// ===================== ĐỊA GIỚI - BỎ QUA (nhập tự do) =====================
+const GEO_UNUSED = {
   "Hà Nội": {
     "Ba Đình": ["Phúc Xá","Trúc Bạch","Vĩnh Phúc","Cống Vị","Liễu Giai","Nguyễn Trung Trực","Quán Thánh","Ngọc Hà","Điện Biên","Đội Cấn","Ngọc Khánh","Kim Mã","Giảng Võ","Thành Công"],
     "Hoàn Kiếm": ["Phúc Tân","Đồng Xuân","Hàng Mã","Hàng Buồm","Hàng Đào","Hàng Bồ","Cửa Đông","Lý Thái Tổ","Hàng Bạc","Hàng Gai","Chương Dương","Hàng Trống","Cửa Nam","Hàng Bông","Tràng Tiền","Trần Hưng Đạo","Phan Chu Trinh","Hàng Bài"],
@@ -412,55 +404,6 @@ const GEO = {
     "Hà Giang": ["Minh Khai","Ngọc Hà","Nguyễn Trãi","Quang Trung","Trần Phú"]
   }
 };
-
-// Render provinces
-const provinceSelect = document.getElementById("province");
-Object.keys(GEO).sort().forEach(p => {
-  const opt = document.createElement("option");
-  opt.value = p;
-  opt.textContent = p;
-  provinceSelect.appendChild(opt);
-});
-
-function onProvinceChange() {
-  const province = provinceSelect.value;
-  const districtSelect = document.getElementById("district");
-  const wardSelect = document.getElementById("ward");
-
-  districtSelect.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>';
-  wardSelect.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
-  wardSelect.disabled = true;
-
-  if (!province) { districtSelect.disabled = true; return; }
-
-  const districts = GEO[province];
-  Object.keys(districts).sort().forEach(d => {
-    const opt = document.createElement("option");
-    opt.value = d;
-    opt.textContent = d;
-    districtSelect.appendChild(opt);
-  });
-  districtSelect.disabled = false;
-}
-
-function onDistrictChange() {
-  const province = provinceSelect.value;
-  const district = document.getElementById("district").value;
-  const wardSelect = document.getElementById("ward");
-
-  wardSelect.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
-
-  if (!province || !district) { wardSelect.disabled = true; return; }
-
-  const wards = GEO[province][district] || [];
-  wards.sort().forEach(w => {
-    const opt = document.createElement("option");
-    opt.value = w;
-    opt.textContent = w;
-    wardSelect.appendChild(opt);
-  });
-  wardSelect.disabled = false;
-}
 
 // ===================== SẢN PHẨM =====================
 const CLOUDINARY_CLOUD_NAME = "ddpsybbri";
